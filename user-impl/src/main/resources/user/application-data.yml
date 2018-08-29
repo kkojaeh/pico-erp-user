@@ -1,0 +1,38 @@
+data:
+  users:
+    - id: ysh
+      name: 임성환
+      password: passw0rd!
+      email: ysh@kd-ace.co.kr
+      mobile-phone-number: "+821011111111"
+    - id: kjh
+      name: 고재훈
+      password: passw0rd!
+      email: kjh@kd-ace.co.kr
+      mobile-phone-number: "+821011111111"
+  departments:
+    - id: management
+      name: 관리
+    - id: finance
+      name: 재경
+    - id: produce
+      name: 생산
+    - id: qc
+      name: QC
+    - id: sales
+      name: 영업
+    - id: design
+      name: 기획
+  groups:
+    - id: management
+      name: 관리
+    - id: finance
+      name: 재경
+    - id: produce
+      name: 생산
+    - id: qc
+      name: QC
+    - id: sales
+      name: 영업
+    - id: design
+      name: 기획

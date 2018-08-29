@@ -1,0 +1,4 @@
+rootProject.name = 'pico-erp-user'
+include 'user-api'
+include 'user-impl'
+

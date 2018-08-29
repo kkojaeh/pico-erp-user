@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: "net.ltgt.apt"
+apply plugin: "io.github.divinespear.jpa-schema-generate"
+
+apply from: 'https://rawgit.com/kkojaeh/pico-erp-gradle/master/impl.gradle'
+
+afterEvaluate {
+  dependencies {
+
+    compile project(':user-api')
+
+    compile('com.github.kkojaeh.pico-erp-shared:shared-impl:1.0.0')
+
+    compile('org.springframework.boot:spring-boot-starter-security')
+
+    // 패스워드 정책 처리
+    compile('org.passay:passay:1.2.0')
+
+    testRuntimeOnly ('com.github.kkojaeh.pico-erp-audit:audit-impl:1.0.0')
+
+  }
+}
