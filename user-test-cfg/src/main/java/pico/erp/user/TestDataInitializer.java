@@ -15,7 +15,7 @@ import pico.erp.user.DepartmentRequests.CreateRequest;
 @Transactional
 @Configuration
 @Profile({"!development", "!production"})
-public class DataInitializer implements ApplicationInitializer {
+public class TestDataInitializer implements ApplicationInitializer {
 
   @Lazy
   @Autowired

@@ -1,4 +1,5 @@
 rootProject.name = 'pico-erp-user'
 include 'user-api'
 include 'user-impl'
+include 'user-test-cfg'
 
