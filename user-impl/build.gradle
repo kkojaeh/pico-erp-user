@@ -10,7 +10,7 @@ afterEvaluate {
 
     compile project(':user-api')
 
-    compile('com.github.kkojaeh.pico-erp-shared:shared-impl:1.0.0')
+    compile("com.github.kkojaeh.pico-erp-shared:shared-impl:${sharedVersion}")
 
     compile('org.springframework.boot:spring-boot-starter-security')
 
@@ -19,7 +19,7 @@ afterEvaluate {
 
     testRuntimeOnly project(':user-test-cfg')
 
-    testRuntimeOnly ('com.github.kkojaeh.pico-erp-audit:audit-impl:1.0.0')
+    testRuntimeOnly ("com.github.kkojaeh.pico-erp-audit:audit-impl:${auditVersion}")
 
   }
 }
