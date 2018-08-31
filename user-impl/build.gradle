@@ -17,8 +17,4 @@ dependencies {
   // 패스워드 정책 처리
   compile('org.passay:passay:1.2.0')
 
-  testRuntimeOnly project(':user-test-cfg')
-
-  testRuntimeOnly("com.github.kkojaeh.pico-erp-audit:audit-impl:${auditVersion}")
-
 }
