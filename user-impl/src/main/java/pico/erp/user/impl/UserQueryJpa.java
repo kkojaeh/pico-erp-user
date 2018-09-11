@@ -5,13 +5,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,14 +26,11 @@ import pico.erp.shared.ExtendedLabeledValue;
 import pico.erp.shared.LabeledValue;
 import pico.erp.shared.Public;
 import pico.erp.shared.data.LabeledValuable;
-import pico.erp.shared.data.Menu;
-import pico.erp.shared.data.MenuCategory;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
 import pico.erp.user.UserQuery;
 import pico.erp.user.core.RoleRepository;
 import pico.erp.user.core.UserRepository;
-import pico.erp.user.data.GrantedMenuView;
 import pico.erp.user.data.RoleId;
 import pico.erp.user.data.UserId;
 import pico.erp.user.data.UserRoleGrantedOrNotView;
@@ -86,48 +79,6 @@ public class UserQueryJpa implements UserQuery {
     query.orderBy(user.name.asc());
     query.limit(limit);
     return query.fetch();
-  }
-
-  @Override
-  public List<GrantedMenuView> findAllGrantedMenus(UserId userId) {
-    User user = isEmpty(userId) ? null : userRepository.findBy(userId).orElse(null);
-    if (user == null) {
-      return Collections.emptyList();
-    }
-    Set<Role> roles = user.getWholeRoles();
-
-    Set<Menu> menus = new HashSet<>();
-    roles.stream()
-      .forEach(role -> menus.addAll(role.getMenus()));
-
-    Map<MenuCategory, GrantedMenuView> categories = new HashMap<>();
-
-    Locale locale = LocaleContextHolder.getLocale();
-
-    menus.stream()
-      .forEach(menu -> {
-        MenuCategory category = menu.getCategory();
-        if (!categories.containsKey(category)) {
-          categories.put(category, GrantedMenuView.builder()
-            .id("category-" + category.name())
-            .name(
-              messageSource.getMessage(category.getNameCode(), null, category.name(), locale))
-            .icon(category.getIcon())
-            .build()
-          );
-        }
-        GrantedMenuView categoryView = categories.get(category);
-        categoryView.getChildren().add(GrantedMenuView.builder()
-          .id("menu-" + menu.getId())
-          .name(messageSource.getMessage(menu.getNameCode(), null, menu.getUrl(), locale))
-          .url(menu.getUrl())
-          .icon(menu.getIcon())
-          .build());
-      });
-    List<GrantedMenuView> views = new LinkedList<>(categories.values());
-    views.forEach(view -> Collections.sort(view.getChildren()));
-    Collections.sort(views);
-    return views;
   }
 
   @Override
