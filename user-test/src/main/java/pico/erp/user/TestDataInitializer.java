@@ -10,8 +10,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 import pico.erp.shared.ApplicationInitializer;
-import pico.erp.user.DepartmentRequests.CreateRequest;
+import pico.erp.user.department.DepartmentRequests.CreateRequest;
+import pico.erp.user.department.DepartmentService;
+import pico.erp.user.group.GroupRequests;
+import pico.erp.user.group.GroupService;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Transactional
 @Configuration
 @Profile({"!development", "!production"})

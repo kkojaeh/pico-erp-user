@@ -21,9 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pico.erp.shared.Public;
 import pico.erp.shared.data.AuthorizedUser;
-import pico.erp.user.core.UserRepository;
+import pico.erp.user.User;
+import pico.erp.user.UserRepository;
 import pico.erp.user.data.UserId;
-import pico.erp.user.domain.User;
 
 @Public
 @Service

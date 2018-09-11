@@ -5,11 +5,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pico.erp.shared.ApplicationInitializer;
-import pico.erp.user.GroupRequests.AddUserRequest;
-import pico.erp.user.GroupRequests.GrantRoleRequest;
 import pico.erp.user.UserRequests.CreateRequest;
+import pico.erp.user.group.GroupQuery;
+import pico.erp.user.group.GroupRequests;
+import pico.erp.user.group.GroupRequests.AddUserRequest;
+import pico.erp.user.group.GroupRequests.GrantRoleRequest;
+import pico.erp.user.group.GroupService;
 
-@SuppressWarnings("SpringJavaAutowiringInspection")
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Configuration
 public class AdministratorInitializer implements ApplicationInitializer {
 

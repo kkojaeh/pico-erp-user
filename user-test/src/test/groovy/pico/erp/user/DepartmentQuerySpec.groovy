@@ -8,6 +8,8 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
 import pico.erp.user.data.DepartmentView
+import pico.erp.user.department.DepartmentQuery
+import pico.erp.user.department.DepartmentService
 import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit

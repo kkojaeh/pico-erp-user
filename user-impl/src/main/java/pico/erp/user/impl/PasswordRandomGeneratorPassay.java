@@ -7,7 +7,7 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pico.erp.user.core.PasswordRandomGenerator;
+import pico.erp.user.PasswordRandomGenerator;
 
 @Component
 public class PasswordRandomGeneratorPassay implements PasswordRandomGenerator {

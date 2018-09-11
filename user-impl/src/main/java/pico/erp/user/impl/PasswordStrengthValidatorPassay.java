@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-import pico.erp.user.core.PasswordStrengthValidator;
+import pico.erp.user.PasswordStrengthValidator;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)

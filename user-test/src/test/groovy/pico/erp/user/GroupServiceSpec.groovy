@@ -9,6 +9,10 @@ import pico.erp.shared.IntegrationConfiguration
 import pico.erp.user.data.GroupId
 import pico.erp.user.data.RoleId
 import pico.erp.user.data.UserId
+import pico.erp.user.group.GroupExceptions
+import pico.erp.user.group.GroupRequests
+import pico.erp.user.group.GroupService
+import pico.erp.user.role.RoleExceptions
 import spock.lang.Specification
 
 @SpringBootTest(classes = [IntegrationConfiguration])
