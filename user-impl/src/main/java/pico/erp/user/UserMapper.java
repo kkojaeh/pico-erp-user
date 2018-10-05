@@ -1,33 +1,27 @@
 package pico.erp.user;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import pico.erp.shared.data.Role;
 import pico.erp.user.UserExceptions.NotFoundException;
-import pico.erp.user.data.DepartmentData;
-import pico.erp.user.data.DepartmentId;
-import pico.erp.user.data.GroupData;
-import pico.erp.user.data.GroupId;
-import pico.erp.user.data.RoleId;
-import pico.erp.user.data.UserData;
-import pico.erp.user.data.UserId;
 import pico.erp.user.department.Department;
-import pico.erp.user.department.DepartmentExceptions;
-import pico.erp.user.department.DepartmentMessages.CreateRequest;
-import pico.erp.user.department.DepartmentMessages.DeleteRequest;
-import pico.erp.user.department.DepartmentMessages.UpdateRequest;
-import pico.erp.user.department.DepartmentRepository;
-import pico.erp.user.department.DepartmentRequests;
+import pico.erp.user.department.DepartmentId;
+import pico.erp.user.department.DepartmentMapper;
 import pico.erp.user.group.Group;
-import pico.erp.user.group.GroupMessages;
-import pico.erp.user.group.GroupMessages.GrantRoleRequest;
-import pico.erp.user.group.GroupMessages.RevokeRoleRequest;
-import pico.erp.user.group.GroupRequests;
-import pico.erp.user.role.RoleExceptions;
-import pico.erp.user.role.RoleRepository;
+import pico.erp.user.group.GroupEntity;
+import pico.erp.user.group.GroupId;
+import pico.erp.user.group.GroupMapper;
+import pico.erp.user.password.PasswordRandomGenerator;
+import pico.erp.user.password.PasswordStrengthValidator;
+import pico.erp.user.role.RoleId;
+import pico.erp.user.role.RoleMapper;
 
 @Mapper
 public abstract class UserMapper {
@@ -38,42 +32,39 @@ public abstract class UserMapper {
   @Autowired
   protected PasswordRandomGenerator passwordRandomGenerator;
 
-  @Autowired
-  private DepartmentRepository departmentRepository;
+  /*@Autowired
+  private DepartmentRepository departmentRepository;*/
 
+  @Lazy
+  @Autowired
+  protected GroupMapper groupMapper;
+
+  @Lazy
+  @Autowired
+  protected RoleMapper roleMapper;
+
+  @Lazy
+  @Autowired
+  protected DepartmentMapper departmentMapper;
+
+  @Lazy
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
-  private RoleRepository roleRepository;
+  private UserEntityRepository userEntityRepository;
 
-
-  protected RoleId map(Role role) {
-    return RoleId.from(role.getId());
-  }
-
-  protected Department map(DepartmentId departmentId) {
+  /*protected Department map(DepartmentId departmentId) {
     return Optional.ofNullable(departmentId)
       .map(id -> departmentRepository.findBy(id)
         .orElseThrow(DepartmentExceptions.NotFoundException::new)
       )
       .orElse(null);
-  }
+  }*/
 
-  protected Role map(RoleId roleId) {
-    return Optional.ofNullable(roleId)
-      .map(id -> roleRepository.findBy(id)
-        .orElseThrow(RoleExceptions.NotFoundException::new)
-      )
-      .orElse(null);
-  }
-
-  protected User map(UserId userId) {
-    return Optional.ofNullable(userId)
-      .map(id -> userRepository.findBy(id)
-        .orElseThrow(NotFoundException::new)
-      )
-      .orElse(null);
+  @AfterMapping
+  protected void afterMapping(UserEntity from, @MappingTarget UserEntity to) {
+    to.setDepartment(from.getDepartment());
   }
 
   @Mappings({
@@ -105,44 +96,80 @@ public abstract class UserMapper {
   })
   public abstract UserMessages.UpdateRequest map(UserRequests.UpdateRequest request);
 
-  public abstract GroupMessages.CreateRequest map(GroupRequests.CreateRequest request);
-
-  public abstract GroupMessages.UpdateRequest map(GroupRequests.UpdateRequest request);
-
-  public abstract GroupMessages.DeleteRequest map(GroupRequests.DeleteRequest request);
-
-  @Mappings({
-    @Mapping(target = "role", source = "roleId")
-  })
-  public abstract GrantRoleRequest map(GroupRequests.GrantRoleRequest request);
-
-  @Mappings({
-    @Mapping(target = "role", source = "roleId")
-  })
-  public abstract RevokeRoleRequest map(GroupRequests.RevokeRoleRequest request);
-
-  public abstract GroupData map(Group group);
-
-  @Mappings({
-    @Mapping(target = "manager", source = "managerId")
-  })
-  public abstract CreateRequest map(DepartmentRequests.CreateRequest request);
-
-  @Mappings({
-    @Mapping(target = "manager", source = "managerId")
-  })
-  public abstract UpdateRequest map(DepartmentRequests.UpdateRequest request);
-
-  public abstract DeleteRequest map(DepartmentRequests.DeleteRequest request);
-
-  @Mappings({
-    @Mapping(target = "managerId", source = "manager.id")
-  })
-  public abstract DepartmentData map(Department department);
-
-  protected GroupId mapId(Group group) {
-    return group.getId();
+  public User domain(UserEntity entity) {
+    return User.builder()
+      .id(entity.getId())
+      .name(entity.getName())
+      .email(entity.getEmail())
+      .mobilePhoneNumber(entity.getMobilePhoneNumber())
+      .position(entity.getPosition())
+      .accountNonExpired(entity.isAccountNonExpired())
+      .accountNonLocked(entity.isAccountNonLocked())
+      .credentialsNonExpired(entity.isCredentialsNonExpired())
+      .enabled(entity.isEnabled())
+      .roles(
+        entity.getRoles()
+          .stream()
+          .map(roleMapper::map)
+          .filter(role -> role != null)
+          .collect(Collectors.toSet())
+      )
+      .groups(
+        entity.getGroups()
+          .stream()
+          .map(groupMapper::domain)
+          .collect(Collectors.toSet())
+      )
+      .department(
+        Optional.ofNullable(entity.getDepartment())
+          .map(departmentMapper::domain)
+          .orElse(null)
+      )
+      .build();
   }
+
+  @Mappings({
+    @Mapping(target = "department", expression = "java(departmentMapper.entity(domain.getDepartment()))"),
+    @Mapping(target = "createdBy", ignore = true),
+    @Mapping(target = "createdDate", ignore = true),
+    @Mapping(target = "lastModifiedBy", ignore = true),
+    @Mapping(target = "lastModifiedDate", ignore = true)
+  })
+  public abstract UserEntity entity(User domain);
+
+  protected GroupEntity entity(Group group) {
+    return groupMapper.entity(group);
+  }
+
+  public User map(UserId userId) {
+    return Optional.ofNullable(userId)
+      .map(id -> userRepository.findBy(id)
+        .orElseThrow(NotFoundException::new)
+      )
+      .orElse(null);
+  }
+
+  /*protected UserEntity map(UserId userId) {
+    return userEntityRepository.findOne(userId);
+  }*/
+
+  protected RoleId map(Role role) {
+    return roleMapper.map(role);
+  }
+
+  protected Role map(RoleId roleId) {
+    return roleMapper.map(roleId);
+  }
+
+  protected Department map(DepartmentId departmentId) {
+    return departmentMapper.domain(departmentId);
+  }
+
+  protected GroupId map(Group group) {
+    return group != null ? group.getId() : null;
+  }
+
+  public abstract void pass(UserEntity from, @MappingTarget UserEntity to);
 
 
 }

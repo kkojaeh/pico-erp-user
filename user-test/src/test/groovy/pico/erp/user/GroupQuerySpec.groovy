@@ -7,11 +7,7 @@ import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.user.data.GroupId
-import pico.erp.user.data.GroupView
-import pico.erp.user.group.GroupQuery
-import pico.erp.user.group.GroupRequests
-import pico.erp.user.group.GroupService
+import pico.erp.user.group.*
 import spock.lang.Specification
 
 @SpringBootTest(classes = [IntegrationConfiguration])

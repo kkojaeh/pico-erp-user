@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pico.erp.audit.data.AuditConfiguration;
+import pico.erp.audit.AuditConfiguration;
 import pico.erp.shared.ApplicationStarter;
 import pico.erp.shared.Public;
 import pico.erp.shared.SpringBootConfigs;
@@ -60,8 +60,11 @@ public class UserApplication implements ApplicationStarter {
 
   @Bean
   @Public
-  public Role userManagerRole() {
-    return ROLE.USER_MANAGER;
+  public AuditConfiguration auditConfiguration() {
+    return AuditConfiguration.builder()
+      .packageToScan("pico.erp.user")
+      .entity(UserRoles.class)
+      .build();
   }
 
   @Component
@@ -77,11 +80,8 @@ public class UserApplication implements ApplicationStarter {
 
   @Bean
   @Public
-  public AuditConfiguration auditConfiguration() {
-    return AuditConfiguration.builder()
-      .packageToScan("pico.erp.user")
-      .entity(ROLE.class)
-      .build();
+  public Role userManagerRole() {
+    return UserRoles.USER_MANAGER;
   }
 
 }

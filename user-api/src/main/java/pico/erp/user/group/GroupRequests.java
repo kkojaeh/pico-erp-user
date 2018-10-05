@@ -8,9 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.shared.TypeDefinitions;
-import pico.erp.user.data.GroupId;
-import pico.erp.user.data.RoleId;
-import pico.erp.user.data.UserId;
+import pico.erp.user.UserId;
+import pico.erp.user.role.RoleId;
 
 public interface GroupRequests {
 

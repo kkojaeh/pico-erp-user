@@ -9,11 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import pico.erp.audit.AuditService;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
-import pico.erp.user.UserMapper;
-import pico.erp.user.data.DepartmentData;
-import pico.erp.user.data.DepartmentId;
-import pico.erp.user.department.DepartmentExceptions.AlreadyExistsException;
-import pico.erp.user.department.DepartmentExceptions.NotFoundException;
 import pico.erp.user.department.DepartmentRequests.CreateRequest;
 import pico.erp.user.department.DepartmentRequests.DeleteRequest;
 import pico.erp.user.department.DepartmentRequests.UpdateRequest;
@@ -36,12 +31,12 @@ public class DepartmentServiceLogic implements DepartmentService {
   private AuditService auditService;
 
   @Autowired
-  private UserMapper mapper;
+  private DepartmentMapper mapper;
 
   @Override
   public DepartmentData create(CreateRequest request) {
     if (departmentRepository.exists(request.getId())) {
-      throw new AlreadyExistsException();
+      throw new DepartmentExceptions.AlreadyExistsException();
     }
     val department = new Department();
     val response = department.apply(mapper.map(request));
@@ -54,7 +49,7 @@ public class DepartmentServiceLogic implements DepartmentService {
   @Override
   public void delete(DeleteRequest request) {
     val department = departmentRepository.findBy(request.getId())
-      .orElseThrow(NotFoundException::new);
+      .orElseThrow(DepartmentExceptions.NotFoundException::new);
 
     val response = department.apply(mapper.map(request));
     departmentRepository.deleteBy(department.getId());
@@ -71,13 +66,13 @@ public class DepartmentServiceLogic implements DepartmentService {
   public DepartmentData get(DepartmentId id) {
     return departmentRepository.findBy(id)
       .map(mapper::map)
-      .orElseThrow(NotFoundException::new);
+      .orElseThrow(DepartmentExceptions.NotFoundException::new);
   }
 
   @Override
   public void update(UpdateRequest request) {
     val department = departmentRepository.findBy(request.getId())
-      .orElseThrow(NotFoundException::new);
+      .orElseThrow(DepartmentExceptions.NotFoundException::new);
     val response = department.apply(mapper.map(request));
     departmentRepository.update(department);
     auditService.commit(department);

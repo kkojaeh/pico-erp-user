@@ -10,14 +10,10 @@ import pico.erp.audit.AuditService;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 import pico.erp.user.UserExceptions.NotFoundException;
-import pico.erp.user.UserMapper;
+import pico.erp.user.UserId;
 import pico.erp.user.UserMessages.BelongToGroupRequest;
 import pico.erp.user.UserMessages.WithdrawFromGroupRequest;
 import pico.erp.user.UserRepository;
-import pico.erp.user.data.GroupData;
-import pico.erp.user.data.GroupId;
-import pico.erp.user.data.RoleId;
-import pico.erp.user.data.UserId;
 import pico.erp.user.group.GroupExceptions.AlreadyExistsException;
 import pico.erp.user.group.GroupRequests.AddUserRequest;
 import pico.erp.user.group.GroupRequests.CreateRequest;
@@ -27,6 +23,7 @@ import pico.erp.user.group.GroupRequests.RemoveUserRequest;
 import pico.erp.user.group.GroupRequests.RevokeRoleRequest;
 import pico.erp.user.group.GroupRequests.UpdateRequest;
 import pico.erp.user.role.RoleExceptions;
+import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
 @SuppressWarnings("Duplicates")
@@ -46,7 +43,7 @@ public class GroupServiceLogic implements GroupService {
   private UserRepository userRepository;
 
   @Autowired
-  private UserMapper mapper;
+  private GroupMapper mapper;
 
   @Autowired
   private EventPublisher eventPublisher;

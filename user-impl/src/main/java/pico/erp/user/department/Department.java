@@ -12,7 +12,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.user.User;
-import pico.erp.user.data.DepartmentId;
 import pico.erp.user.department.DepartmentEvents.CreatedEvent;
 import pico.erp.user.department.DepartmentEvents.DeletedEvent;
 import pico.erp.user.department.DepartmentEvents.UpdatedEvent;

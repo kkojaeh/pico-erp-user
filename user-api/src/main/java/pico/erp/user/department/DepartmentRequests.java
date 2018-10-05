@@ -8,8 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.shared.TypeDefinitions;
-import pico.erp.user.data.DepartmentId;
-import pico.erp.user.data.UserId;
+import pico.erp.user.UserId;
 
 public interface DepartmentRequests {
 

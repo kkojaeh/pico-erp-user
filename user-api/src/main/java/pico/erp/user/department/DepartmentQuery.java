@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pico.erp.shared.data.LabeledValuable;
-import pico.erp.user.data.DepartmentView;
 
 public interface DepartmentQuery {
 

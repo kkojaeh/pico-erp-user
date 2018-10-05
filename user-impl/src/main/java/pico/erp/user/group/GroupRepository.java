@@ -3,7 +3,6 @@ package pico.erp.user.group;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
-import pico.erp.user.data.GroupId;
 
 public interface GroupRepository {
 

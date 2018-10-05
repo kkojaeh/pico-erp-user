@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.shared.Public;
 import pico.erp.shared.data.ContentInputStream;
-import pico.erp.user.data.GroupId;
 import pico.erp.user.group.GroupRequests.CreateRequest;
 import pico.erp.user.group.GroupRequests.UpdateRequest;
 

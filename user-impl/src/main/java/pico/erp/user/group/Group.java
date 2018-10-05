@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.ToString;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.shared.data.Role;
-import pico.erp.user.data.GroupId;
 import pico.erp.user.group.GroupMessages.CreateResponse;
 import pico.erp.user.group.GroupMessages.DeleteResponse;
 import pico.erp.user.group.GroupMessages.GrantRoleResponse;

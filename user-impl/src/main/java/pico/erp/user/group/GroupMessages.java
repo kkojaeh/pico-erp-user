@@ -9,7 +9,6 @@ import lombok.Value;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.event.Event;
-import pico.erp.user.data.GroupId;
 
 public interface GroupMessages {
 

@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pico.erp.user.data.DepartmentId;
-import pico.erp.user.data.UserId;
+import pico.erp.user.department.DepartmentId;
 import pico.erp.user.department.DepartmentXportData.DepartmentIdColumnValueConverter;
 
 @Data

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.shared.event.Event;
-import pico.erp.user.data.UserId;
 
 public interface UserEvents {
 

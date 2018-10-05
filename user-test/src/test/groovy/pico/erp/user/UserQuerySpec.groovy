@@ -7,7 +7,6 @@ import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.user.data.UserView
 import spock.lang.Specification
 
 @SpringBootTest(classes = [IntegrationConfiguration])

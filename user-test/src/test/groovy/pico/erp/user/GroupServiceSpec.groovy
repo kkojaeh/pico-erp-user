@@ -6,13 +6,12 @@ import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.user.data.GroupId
-import pico.erp.user.data.RoleId
-import pico.erp.user.data.UserId
 import pico.erp.user.group.GroupExceptions
+import pico.erp.user.group.GroupId
 import pico.erp.user.group.GroupRequests
 import pico.erp.user.group.GroupService
 import pico.erp.user.role.RoleExceptions
+import pico.erp.user.role.RoleId
 import spock.lang.Specification
 
 @SpringBootTest(classes = [IntegrationConfiguration])
@@ -67,25 +66,25 @@ class GroupServiceSpec extends Specification {
 
   def "권한을 부여하고 확인"() {
     when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
-    groupService.hasRole(GroupId.from("sa"), RoleId.from(ROLE.USER_MANAGER.getId())) == true
+    groupService.hasRole(GroupId.from("sa"), RoleId.from(UserRoles.USER_MANAGER.getId())) == true
   }
 
   def "제거한 권한을 확인"() {
     when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
-    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
-    groupService.hasRole(GroupId.from("sa"), RoleId.from(ROLE.USER_MANAGER.getId())) == false
+    groupService.hasRole(GroupId.from("sa"), RoleId.from(UserRoles.USER_MANAGER.getId())) == false
   }
 
   def "기존에 존재하던 권한을 부여"() {
     when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
     thrown(RoleExceptions.AlreadyExistsException)
@@ -93,7 +92,7 @@ class GroupServiceSpec extends Specification {
 
   def "부여되지 않았던 권한을 해제"() {
     when:
-    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
     thrown(RoleExceptions.NotFoundException)

@@ -2,27 +2,33 @@ package pico.erp.user
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.user.data.DepartmentId
-import pico.erp.user.data.RoleId
-import pico.erp.user.data.UserId
+import pico.erp.user.department.DepartmentId
 import pico.erp.user.department.DepartmentRequests
 import pico.erp.user.department.DepartmentService
 import pico.erp.user.role.RoleExceptions
+import pico.erp.user.role.RoleId
 import spock.lang.Specification
 
 @SpringBootTest(classes = [IntegrationConfiguration])
 @Transactional
 @Rollback
 @ActiveProfiles("test")
+@Configuration
+@ComponentScan("pico.erp.config")
 class UserServiceSpec extends Specification {
 
+  @Lazy
   @Autowired
   UserService userService
 
+  @Lazy
   @Autowired
   DepartmentService departmentService
 
@@ -83,25 +89,25 @@ class UserServiceSpec extends Specification {
 
   def "권한을 부여하고 확인"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
-    userService.hasRole(UserId.from('kjh'), RoleId.from(ROLE.USER_MANAGER.getId())) == true
+    userService.hasRole(UserId.from('kjh'), RoleId.from(UserRoles.USER_MANAGER.getId())) == true
   }
 
   def "제거한 권한을 확인"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
-    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
-    userService.hasRole(UserId.from('kjh'), RoleId.from(ROLE.USER_MANAGER.getId())) == false
+    userService.hasRole(UserId.from('kjh'), RoleId.from(UserRoles.USER_MANAGER.getId())) == false
   }
 
   def "기존에 존재하던 권한을 부여"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
     thrown(RoleExceptions.AlreadyExistsException)
@@ -109,7 +115,7 @@ class UserServiceSpec extends Specification {
 
   def "부여되지 않았던 권한을 해제"() {
     when:
-    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(ROLE.USER_MANAGER.getId())))
+    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
 
     then:
     thrown(RoleExceptions.NotFoundException)

@@ -3,7 +3,6 @@ package pico.erp.user.department;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
-import pico.erp.user.data.DepartmentId;
 
 public interface DepartmentRepository {
 

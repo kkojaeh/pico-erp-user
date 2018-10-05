@@ -25,7 +25,6 @@ import pico.erp.shared.Public;
 import pico.erp.shared.data.ContentInputStream;
 import pico.erp.user.User;
 import pico.erp.user.UserRepository;
-import pico.erp.user.data.DepartmentId;
 import pico.erp.user.department.DepartmentRequests.CreateRequest;
 import pico.erp.user.department.DepartmentRequests.UpdateRequest;
 

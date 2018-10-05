@@ -9,9 +9,10 @@ import lombok.Value;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.event.Event;
-import pico.erp.user.data.UserId;
 import pico.erp.user.department.Department;
 import pico.erp.user.group.Group;
+import pico.erp.user.password.PasswordRandomGenerator;
+import pico.erp.user.password.PasswordStrengthValidator;
 
 public interface UserMessages {
 

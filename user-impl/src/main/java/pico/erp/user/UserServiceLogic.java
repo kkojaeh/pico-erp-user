@@ -17,10 +17,8 @@ import pico.erp.user.UserRequests.DeleteRequest;
 import pico.erp.user.UserRequests.GrantRoleRequest;
 import pico.erp.user.UserRequests.RevokeRoleRequest;
 import pico.erp.user.UserRequests.UpdateRequest;
-import pico.erp.user.data.RoleId;
-import pico.erp.user.data.UserData;
-import pico.erp.user.data.UserId;
 import pico.erp.user.role.RoleExceptions;
+import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
 @SuppressWarnings("Duplicates")

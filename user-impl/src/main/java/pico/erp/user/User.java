@@ -24,7 +24,6 @@ import pico.erp.user.UserEvents.UpdatedEvent;
 import pico.erp.user.UserExceptions.GroupAlreadyExistsException;
 import pico.erp.user.UserExceptions.GroupNotFoundException;
 import pico.erp.user.UserExceptions.PasswordInvalidException;
-import pico.erp.user.data.UserId;
 import pico.erp.user.department.Department;
 import pico.erp.user.group.Group;
 import pico.erp.user.role.RoleExceptions.AlreadyExistsException;
