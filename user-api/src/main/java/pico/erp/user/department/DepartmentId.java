@@ -1,5 +1,6 @@
 package pico.erp.user.department;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
@@ -26,6 +27,7 @@ public class DepartmentId implements Serializable {
   @NotNull
   private String value;
 
+  @JsonCreator
   public static DepartmentId from(@NonNull String value) {
     return new DepartmentId(value);
   }

@@ -1,5 +1,6 @@
 package pico.erp.user.role;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
@@ -26,6 +27,7 @@ public class RoleId implements Serializable {
   @NotNull
   private String value;
 
+  @JsonCreator
   public static RoleId from(@NonNull String value) {
     return new RoleId(value);
   }
