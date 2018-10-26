@@ -20,6 +20,7 @@ import pico.erp.shared.LabeledValue;
 import pico.erp.shared.Public;
 import pico.erp.shared.data.LabeledValuable;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
+import pico.erp.user.QUserEntity;
 
 @Service
 @Public
@@ -28,6 +29,8 @@ import pico.erp.shared.jpa.QueryDslJpaSupport;
 public class DepartmentQueryJpa implements DepartmentQuery {
 
   private final QDepartmentEntity department = QDepartmentEntity.departmentEntity;
+
+  private final QUserEntity user = QUserEntity.userEntity;
 
   @PersistenceContext
   private EntityManager entityManager;
@@ -41,11 +44,13 @@ public class DepartmentQueryJpa implements DepartmentQuery {
     val select = Projections.bean(ExtendedLabeledValue.class,
       department.id.value.as("value"),
       department.name.as("label"),
-      department.manager.name.as("subLabel"),
-      department.manager.id.value.as("stamp")
+      user.name.as("subLabel"),
+      user.id.value.as("stamp")
     );
     query.select(select);
     query.from(department);
+    query.leftJoin(user)
+      .on(department.managerId.eq(user.id));
     query
       .where(
         department.name.likeIgnoreCase(queryDslJpaSupport.toLikeKeyword("%", keyword, "%")));
@@ -60,8 +65,8 @@ public class DepartmentQueryJpa implements DepartmentQuery {
     val select = Projections.bean(DepartmentView.class,
       department.id,
       department.name,
-      department.manager.id.as("managerId"),
-      department.manager.name.as("managerName"),
+      user.id.as("managerId"),
+      user.name.as("managerName"),
       department.createdBy,
       department.createdDate,
       department.lastModifiedBy,
@@ -69,7 +74,8 @@ public class DepartmentQueryJpa implements DepartmentQuery {
     );
     query.select(select);
     query.from(department);
-    query.leftJoin(department.manager);
+    query.leftJoin(user)
+      .on(department.managerId.eq(user.id));
 
     val builder = new BooleanBuilder();
 
@@ -81,7 +87,7 @@ public class DepartmentQueryJpa implements DepartmentQuery {
     }
     if (filter.getManagerId() != null) {
       builder.and(
-        department.manager.id.eq(filter.getManagerId())
+        department.managerId.eq(filter.getManagerId())
       );
     }
     query.where(builder);

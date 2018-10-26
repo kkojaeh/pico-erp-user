@@ -3,7 +3,6 @@ package pico.erp.user;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -18,9 +17,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -40,13 +36,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
 import pico.erp.shared.jpa.CrytoAttributeConverter;
-import pico.erp.user.department.DepartmentEntity;
-import pico.erp.user.group.GroupEntity;
+import pico.erp.user.department.DepartmentId;
+import pico.erp.user.group.GroupId;
 import pico.erp.user.role.RoleId;
 
 @Entity(name = "User")
 @Table(name = "USR_USER", indexes = {
-  @Index(name = "USR_USER_EMAIL_IDX", columnList = "EMAIL", unique = true)
+  @Index(columnList = "EMAIL", unique = true)
 })
 @Data
 @EqualsAndHashCode(of = "id")
@@ -119,30 +115,30 @@ public class UserEntity implements Serializable {
   @Convert(converter = CrytoAttributeConverter.class)
   String mobilePhoneNumber;
 
-  @Builder.Default
-  @ManyToMany
+  @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-  @JoinTable(
-    name = "USR_USER_GROUP",
-    joinColumns = {@JoinColumn(name = "USER_ID")},
-    inverseJoinColumns = {@JoinColumn(name = "GROUP_ID")}
-  )
-  Set<GroupEntity> groups = new HashSet<>();
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "GROUP_ID", length = TypeDefinitions.ID_LENGTH, nullable = false))
+  })
+  @CollectionTable(name = "USR_USER_GROUP", joinColumns = @JoinColumn(name = "USER_ID"), uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"USER_ID", "GROUP_ID"})
+  })
+  Set<GroupId> groups;
 
-  @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ROLE_ID", length = TypeDefinitions.ID_LENGTH, nullable = false))
   })
   @CollectionTable(name = "USR_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"), uniqueConstraints = {
-    @UniqueConstraint(name = "USR_USER_ROLE_UC", columnNames = {"USER_ID", "ROLE_ID"})
+    @UniqueConstraint(columnNames = {"USER_ID", "ROLE_ID"})
   })
   @OrderColumn
-  Set<RoleId> roles = new HashSet<>();
+  Set<RoleId> roles;
 
-  @ManyToOne
-  @JoinColumn(name = "DEPARTMENT_ID")
-  DepartmentEntity department;
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "DEPARTMENT_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  DepartmentId departmentId;
 
 }

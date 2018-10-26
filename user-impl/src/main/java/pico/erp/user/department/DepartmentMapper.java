@@ -1,7 +1,6 @@
 package pico.erp.user.department;
 
 import java.util.Optional;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -19,27 +18,15 @@ public abstract class DepartmentMapper {
   @Autowired
   protected UserMapper userMapper;
 
-  @Autowired
-  private DepartmentEntityRepository departmentEntityRepository;
-
   @Lazy
   @Autowired
   private DepartmentRepository departmentRepository;
-
-  @AfterMapping
-  protected void afterMapping(DepartmentEntity from, @MappingTarget DepartmentEntity to) {
-    to.setManager(from.getManager());
-  }
 
   public Department domain(DepartmentEntity entity) {
     return Department.builder()
       .id(entity.getId())
       .name(entity.getName())
-      .manager(
-        Optional.ofNullable(entity.getManager())
-          .map(userMapper::domain)
-          .orElse(null)
-      )
+      .manager(map(entity.getManagerId()))
       .build();
   }
 
@@ -51,17 +38,13 @@ public abstract class DepartmentMapper {
   }
 
   @Mappings({
-    @Mapping(target = "manager", expression = "java(userMapper.entity(domain.getManager()))"),
+    @Mapping(target = "managerId", source = "manager.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
     @Mapping(target = "lastModifiedDate", ignore = true)
   })
   public abstract DepartmentEntity entity(Department domain);
-
-  public DepartmentEntity entity(DepartmentId departmentId) {
-    return departmentEntityRepository.findOne(departmentId);
-  }
 
   protected User map(UserId userId) {
     return userMapper.map(userId);
@@ -85,7 +68,6 @@ public abstract class DepartmentMapper {
   public abstract DepartmentData map(Department department);
 
   @Mappings({
-    @Mapping(target = "manager", ignore = true)
   })
   public abstract void pass(DepartmentEntity from, @MappingTarget DepartmentEntity to);
 

@@ -1,5 +1,6 @@
 package pico.erp.user.group;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,8 +21,9 @@ public abstract class GroupMapper {
   @Autowired
   protected RoleMapper roleMapper;
 
+  @Lazy
   @Autowired
-  private GroupEntityRepository groupEntityRepository;
+  private GroupRepository groupRepository;
 
   public Group domain(GroupEntity entity) {
     return Group.builder()
@@ -63,8 +65,16 @@ public abstract class GroupMapper {
 
   public abstract GroupData map(Group group);
 
-  protected GroupEntity map(GroupId groupId) {
+  /*protected GroupEntity jpa(GroupId groupId) {
     return groupEntityRepository.findOne(groupId);
+  }
+*/
+  public Group map(GroupId groupId) {
+    return Optional.ofNullable(groupId)
+      .map(id -> groupRepository.findBy(id)
+        .orElseThrow(GroupExceptions.NotFoundException::new)
+      )
+      .orElse(null);
   }
 
   protected RoleId map(Role role) {

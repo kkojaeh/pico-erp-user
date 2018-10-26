@@ -3,11 +3,13 @@ package pico.erp.user.role;
 import java.util.Optional;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import pico.erp.shared.data.Role;
 
 @Mapper
 public abstract class RoleMapper {
 
+  @Lazy
   @Autowired
   private RoleRepository roleRepository;
 

@@ -89,7 +89,7 @@ public class GroupEntity implements Serializable {
     @AttributeOverride(name = "value", column = @Column(name = "ROLE_ID", length = TypeDefinitions.ID_LENGTH, nullable = false))
   })
   @CollectionTable(name = "USR_GROUP_ROLE", joinColumns = @JoinColumn(name = "GROUP_ID"), uniqueConstraints = {
-    @UniqueConstraint(name = "USR_GROUP_ROLE_UC", columnNames = {"GROUP_ID", "ROLE_ID"})
+    @UniqueConstraint(columnNames = {"GROUP_ID", "ROLE_ID"})
   })
   @OrderColumn
   Set<RoleId> roles = new HashSet<>();

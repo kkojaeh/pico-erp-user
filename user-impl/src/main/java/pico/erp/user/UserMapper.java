@@ -2,7 +2,6 @@ package pico.erp.user;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -15,7 +14,6 @@ import pico.erp.user.department.Department;
 import pico.erp.user.department.DepartmentId;
 import pico.erp.user.department.DepartmentMapper;
 import pico.erp.user.group.Group;
-import pico.erp.user.group.GroupEntity;
 import pico.erp.user.group.GroupId;
 import pico.erp.user.group.GroupMapper;
 import pico.erp.user.password.PasswordRandomGenerator;
@@ -32,9 +30,6 @@ public abstract class UserMapper {
   @Autowired
   protected PasswordRandomGenerator passwordRandomGenerator;
 
-  /*@Autowired
-  private DepartmentRepository departmentRepository;*/
-
   @Lazy
   @Autowired
   protected GroupMapper groupMapper;
@@ -50,22 +45,6 @@ public abstract class UserMapper {
   @Lazy
   @Autowired
   private UserRepository userRepository;
-
-  @Autowired
-  private UserEntityRepository userEntityRepository;
-
-  /*protected Department map(DepartmentId departmentId) {
-    return Optional.ofNullable(departmentId)
-      .map(id -> departmentRepository.findBy(id)
-        .orElseThrow(DepartmentExceptions.NotFoundException::new)
-      )
-      .orElse(null);
-  }*/
-
-  @AfterMapping
-  protected void afterMapping(UserEntity from, @MappingTarget UserEntity to) {
-    to.setDepartment(from.getDepartment());
-  }
 
   @Mappings({
     @Mapping(target = "departmentId", source = "department.id")
@@ -110,26 +89,22 @@ public abstract class UserMapper {
       .roles(
         entity.getRoles()
           .stream()
-          .map(roleMapper::map)
+          .map(this::map)
           .filter(role -> role != null)
           .collect(Collectors.toSet())
       )
       .groups(
         entity.getGroups()
           .stream()
-          .map(groupMapper::domain)
+          .map(this::map)
           .collect(Collectors.toSet())
       )
-      .department(
-        Optional.ofNullable(entity.getDepartment())
-          .map(departmentMapper::domain)
-          .orElse(null)
-      )
+      .department(map(entity.getDepartmentId()))
       .build();
   }
 
   @Mappings({
-    @Mapping(target = "department", expression = "java(departmentMapper.entity(domain.getDepartment()))"),
+    @Mapping(target = "departmentId", source = "department.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -137,8 +112,8 @@ public abstract class UserMapper {
   })
   public abstract UserEntity entity(User domain);
 
-  protected GroupEntity entity(Group group) {
-    return groupMapper.entity(group);
+  protected Group map(GroupId groupId) {
+    return groupMapper.map(groupId);
   }
 
   public User map(UserId userId) {
@@ -148,10 +123,6 @@ public abstract class UserMapper {
       )
       .orElse(null);
   }
-
-  /*protected UserEntity map(UserId userId) {
-    return userEntityRepository.findOne(userId);
-  }*/
 
   protected RoleId map(Role role) {
     return roleMapper.map(role);

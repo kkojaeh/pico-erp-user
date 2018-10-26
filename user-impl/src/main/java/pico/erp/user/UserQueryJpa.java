@@ -28,6 +28,7 @@ import pico.erp.shared.Public;
 import pico.erp.shared.data.LabeledValuable;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
+import pico.erp.user.department.QDepartmentEntity;
 import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
@@ -38,6 +39,8 @@ import pico.erp.user.role.RoleRepository;
 public class UserQueryJpa implements UserQuery {
 
   private final QUserEntity user = QUserEntity.userEntity;
+
+  private final QDepartmentEntity department = QDepartmentEntity.departmentEntity;
 
   @PersistenceContext
   private EntityManager entityManager;
@@ -117,8 +120,8 @@ public class UserQueryJpa implements UserQuery {
       user.email,
       user.enabled,
       user.mobilePhoneNumber,
-      user.department.id.as("departmentId"),
-      user.department.name.as("departmentName"),
+      department.id.as("departmentId"),
+      department.name.as("departmentName"),
       user.createdBy,
       user.createdDate,
       user.lastModifiedBy,
@@ -134,13 +137,14 @@ public class UserQueryJpa implements UserQuery {
         .likeIgnoreCase(queryDslJpaSupport.toLikeKeyword("%", filter.getName(), "%")));
     }
     if (filter.getDepartmentId() != null) {
-      builder.and(user.department.id.eq(filter.getDepartmentId()));
+      builder.and(user.departmentId.eq(filter.getDepartmentId()));
     }
     if (filter.getEnabled() != null) {
       builder.and(user.enabled.eq(filter.getEnabled()));
     }
     query.from(user);
-    query.leftJoin(user.department);
+    query.leftJoin(department)
+      .on(user.departmentId.eq(department.id));
     query.where(builder);
 
     return queryDslJpaSupport.paging(query, pageable, select);

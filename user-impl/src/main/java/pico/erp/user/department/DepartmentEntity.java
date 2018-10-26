@@ -10,8 +10,6 @@ import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,7 +26,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
-import pico.erp.user.UserEntity;
+import pico.erp.user.UserId;
 
 @Entity(name = "Department")
 @Table(name = "USR_DEPARTMENT")
@@ -53,9 +51,10 @@ public class DepartmentEntity implements Serializable {
   @Column(length = TypeDefinitions.NAME_LENGTH)
   String name;
 
-  @ManyToOne
-  @JoinColumn(name = "MANAGER_ID")
-  UserEntity manager;
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "MANAGER_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  UserId managerId;
 
   @Embedded
   @AttributeOverrides({

@@ -6,8 +6,8 @@ create table usr_department (
 	last_modified_by_id varchar(50),
 	last_modified_by_name varchar(50),
 	last_modified_date datetime,
-	name varchar(50),
 	manager_id varchar(50),
+	name varchar(50),
 	primary key (id)
 ) engine=InnoDB;
 
@@ -25,7 +25,8 @@ create table usr_group (
 
 create table usr_group_role (
 	group_id varchar(50) not null,
-	role_id varchar(50)
+	role_id varchar(50) not null,
+	primary key (group_id,role_id)
 ) engine=InnoDB;
 
 create table usr_user (
@@ -36,6 +37,7 @@ create table usr_user (
 	created_by_name varchar(50),
 	created_date datetime,
 	credentials_non_expired bit not null,
+	department_id varchar(50),
 	email varchar(60),
 	enabled bit not null,
 	last_modified_by_id varchar(50),
@@ -43,9 +45,7 @@ create table usr_user (
 	last_modified_date datetime,
 	mobile_phone_number varchar(40),
 	name varchar(50),
-	password varchar(100),
 	position varchar(20),
-	department_id varchar(50),
 	primary key (id)
 ) engine=InnoDB;
 
@@ -57,26 +57,15 @@ create table usr_user_group (
 
 create table usr_user_role (
 	user_id varchar(50) not null,
-	role_id varchar(50)
+	role_id varchar(50) not null,
+	primary key (user_id,role_id)
 ) engine=InnoDB;
 
 alter table usr_user
-	add constraint USR_USER_EMAIL_IDX unique (email);
-
-alter table usr_department
-	add constraint FKaaxkuoxm4nli9wl1n0h58a1ao foreign key (manager_id)
-	references usr_user (id);
+	add constraint UK4o9e1bl8qyhktc2ylbhkjv0gl unique (email);
 
 alter table usr_group_role
 	add constraint FKkfigodg9cddatb5swfpyygcrg foreign key (group_id)
-	references usr_group (id);
-
-alter table usr_user
-	add constraint FKffx5ipbymmvgn63y6s9j1k7g5 foreign key (department_id)
-	references usr_department (id);
-
-alter table usr_user_group
-	add constraint FK35ekeqb09qbv3sgn3hi57ryjy foreign key (group_id)
 	references usr_group (id);
 
 alter table usr_user_group

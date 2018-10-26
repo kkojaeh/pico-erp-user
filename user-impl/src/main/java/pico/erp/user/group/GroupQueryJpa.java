@@ -6,7 +6,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -75,10 +74,6 @@ public class GroupQueryJpa implements GroupQuery {
 
   @Override
   public List<GroupJoinedUserView> findAllGroupJoinedUser(GroupId groupId) {
-    val groupEntity = entityManager.find(GroupEntity.class, groupId);
-    if (groupEntity == null) {
-      return Collections.emptyList();
-    }
     val query = new JPAQuery<GroupJoinedUserView>(entityManager);
 
     val select = Projections.bean(GroupJoinedUserView.class,
@@ -88,7 +83,7 @@ public class GroupQueryJpa implements GroupQuery {
     );
     query.select(select);
     query.from(user);
-    query.where(user.groups.contains(groupEntity));
+    query.where(user.groups.contains(groupId));
     return query.fetch();
   }
 
