@@ -16,7 +16,6 @@ import pico.erp.user.group.GroupRequests;
 import pico.erp.user.group.GroupService;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-@Transactional
 @Configuration
 @Profile({"!development", "!production"})
 public class TestDataInitializer implements ApplicationInitializer {
