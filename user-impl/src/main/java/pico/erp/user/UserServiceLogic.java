@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.audit.AuditService;
 import pico.erp.shared.Public;
+import pico.erp.shared.data.Auditor;
 import pico.erp.shared.event.EventPublisher;
 import pico.erp.user.UserExceptions.AlreadyExistsException;
 import pico.erp.user.UserExceptions.EmailAlreadyExistsException;
@@ -79,7 +80,7 @@ public class UserServiceLogic implements UserService {
   public UserData get(UserId id) {
     return userRepository.findBy(id)
       .map(userMapper::map)
-      .orElseThrow(NotFoundException::new);
+      .orElseThrow(UserExceptions.NotFoundException::new);
   }
 
   @Override
@@ -90,8 +91,16 @@ public class UserServiceLogic implements UserService {
   }
 
   @Override
+  public Auditor getAuditor(UserId id) {
+    return userRepository.findBy(id)
+      .map(user -> new Auditor(user.getId().getValue(), user.getName()))
+      .orElseThrow(UserExceptions.NotFoundException::new);
+  }
+
+  @Override
   public void grantRole(GrantRoleRequest request) {
-    val user = userRepository.findBy(request.getId()).orElseThrow(NotFoundException::new);
+    val user = userRepository.findBy(request.getId())
+      .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
     auditService.commit(user);
@@ -100,7 +109,7 @@ public class UserServiceLogic implements UserService {
 
   @Override
   public boolean hasRole(UserId userId, RoleId roleId) {
-    val user = userRepository.findBy(userId).orElseThrow(NotFoundException::new);
+    val user = userRepository.findBy(userId).orElseThrow(UserExceptions.NotFoundException::new);
     val role = roleRepository.findBy(roleId).orElseThrow(
       RoleExceptions.NotFoundException::new);
     return user.getRoles().contains(role);
@@ -108,7 +117,8 @@ public class UserServiceLogic implements UserService {
 
   @Override
   public void revokeRole(RevokeRoleRequest request) {
-    val user = userRepository.findBy(request.getId()).orElseThrow(NotFoundException::new);
+    val user = userRepository.findBy(request.getId())
+      .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
     auditService.commit(user);
@@ -117,7 +127,8 @@ public class UserServiceLogic implements UserService {
 
   @Override
   public void update(UpdateRequest request) {
-    val user = userRepository.findBy(request.getId()).orElseThrow(NotFoundException::new);
+    val user = userRepository.findBy(request.getId())
+      .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
     auditService.commit(user);

@@ -2,6 +2,7 @@ package pico.erp.user;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import pico.erp.shared.data.Auditor;
 import pico.erp.user.UserRequests.CreateRequest;
 import pico.erp.user.UserRequests.DeleteRequest;
 import pico.erp.user.UserRequests.GrantRoleRequest;
@@ -28,5 +29,7 @@ public interface UserService {
   void revokeRole(@Valid RevokeRoleRequest request);
 
   void update(@Valid UpdateRequest request);
+
+  Auditor getAuditor(@NotNull UserId id);
 
 }

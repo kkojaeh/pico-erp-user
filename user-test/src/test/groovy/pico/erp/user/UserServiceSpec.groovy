@@ -44,6 +44,16 @@ class UserServiceSpec extends Specification {
     exists == true
   }
 
+  def "auditor 전환"() {
+    when:
+    def user = userService.get(UserId.from("kjh"))
+    def auditor = userService.getAuditor(UserId.from("kjh"))
+
+    then:
+    user.id.value == auditor.id
+    user.name == auditor.name
+  }
+
   def "존재하지 않는 사용자가 확인"() {
     when:
     def exists = userService.exists(UserId.from("!kjh"))
