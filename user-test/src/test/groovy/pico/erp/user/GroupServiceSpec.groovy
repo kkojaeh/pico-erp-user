@@ -23,111 +23,182 @@ class GroupServiceSpec extends Specification {
   @Autowired
   GroupService groupService
 
-  @Autowired
-  UserService userService
+  def id = GroupId.from("sa")
+
+  def unknownId = GroupId.from("unknown")
+
+  def name = "슈퍼어드민"
+
+  def roleId = RoleId.from(UserRoles.USER_MANAGER.getId())
+
+  def userId = UserId.from("kjh")
 
   def setup() {
-    groupService.create(new GroupRequests.CreateRequest(id: GroupId.from("sa"), name: "슈퍼어드민"))
+    groupService.create(
+      new GroupRequests.CreateRequest(
+        id: id,
+        name: name
+      )
+    )
   }
 
-  def "존재하는 그룹을 확인"() {
+  def "존재 - 아이디로 확인"() {
     when:
-    def exists = groupService.exists(GroupId.from("sa"))
+    def exists = groupService.exists(id)
 
     then:
     exists == true
   }
 
-  def "존재하지 않는 그룹을 확인"() {
+  def "존재 - 존재하지 않는 아이디로 확인"() {
     when:
-    def exists = groupService.exists(GroupId.from("!sa"))
+    def exists = groupService.exists(unknownId)
 
     then:
     exists == false
   }
 
-  def "존재하는 그룹 조회"() {
+  def "조회 - 아이디로 조회"() {
     when:
-    def group = groupService.get(GroupId.from("sa"))
+    def group = groupService.get(id)
 
     then:
 
-    group.id.value == "sa"
-    group.name == "슈퍼어드민"
+    group.id == id
+    group.name == name
   }
 
-  def "존재하지 않는 그룹 조회"() {
+  def "조회 - 존재하지 않는 아이디로 조회"() {
     when:
-    groupService.get(GroupId.from("!sa"))
+    groupService.get(unknownId)
 
     then:
     thrown(GroupExceptions.NotFoundException)
   }
 
-  def "권한을 부여하고 확인"() {
+  def "권한부여 - 권한 부여"() {
     when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    groupService.grantRole(
+      new GroupRequests.GrantRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
 
     then:
-    groupService.hasRole(GroupId.from("sa"), RoleId.from(UserRoles.USER_MANAGER.getId())) == true
+    groupService.hasRole(id, roleId)
   }
 
-  def "제거한 권한을 확인"() {
+  def "권한부여 - 중복 권한 부여"() {
     when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
-    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
-
-    then:
-    groupService.hasRole(GroupId.from("sa"), RoleId.from(UserRoles.USER_MANAGER.getId())) == false
-  }
-
-  def "기존에 존재하던 권한을 부여"() {
-    when:
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
-    groupService.grantRole(new GroupRequests.GrantRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    groupService.grantRole(
+      new GroupRequests.GrantRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
+    groupService.grantRole(
+      new GroupRequests.GrantRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
 
     then:
     thrown(RoleExceptions.AlreadyExistsException)
   }
 
-  def "부여되지 않았던 권한을 해제"() {
+  def "권한해제 - 부여한 권한을 해제"() {
     when:
-    groupService.revokeRole(new GroupRequests.RevokeRoleRequest(id: GroupId.from("sa"), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    groupService.grantRole(
+      new GroupRequests.GrantRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
+    groupService.revokeRole(
+      new GroupRequests.RevokeRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
+    then:
+    groupService.hasRole(GroupId.from("sa"), RoleId.from(UserRoles.USER_MANAGER.getId())) == false
+  }
+
+  def "권한해제 - 부여되지 않았던 권한을 해제"() {
+    when:
+    groupService.revokeRole(
+      new GroupRequests.RevokeRoleRequest(
+        id: id,
+        roleId: roleId
+      )
+    )
 
     then:
     thrown(RoleExceptions.NotFoundException)
   }
 
 
-  def "사용자를 추가하고 확인"() {
+  def "사용자 추가 - 사용자 추가하"() {
     when:
-    groupService.addUser(new GroupRequests.AddUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
+    groupService.addUser(
+      new GroupRequests.AddUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
 
     then:
-    groupService.hasUser(GroupId.from("sa"), UserId.from("kjh")) == true
+    groupService.hasUser(id, userId) == true
   }
 
-  def "제거한 사용자를 확인"() {
+  def "사용자 제거 - 추가한 사용자를 제거"() {
     when:
-    groupService.addUser(new GroupRequests.AddUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
-    groupService.removeUser(new GroupRequests.RemoveUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
+    groupService.addUser(
+      new GroupRequests.AddUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
+    groupService.removeUser(
+      new GroupRequests.RemoveUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
 
     then:
-    groupService.hasUser(GroupId.from("sa"), UserId.from("kjh")) == false
+    groupService.hasUser(id, userId) == false
   }
 
-  def "기존에 존재하던 사용자를 추가"() {
+  def "사용자 추가 - 중복된 사용자를 추가"() {
     when:
-    groupService.addUser(new GroupRequests.AddUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
-    groupService.addUser(new GroupRequests.AddUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
+    groupService.addUser(
+      new GroupRequests.AddUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
+    groupService.addUser(
+      new GroupRequests.AddUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
 
     then:
     thrown(UserExceptions.GroupAlreadyExistsException)
   }
 
-  def "존재하지 않았던 사용자를 제거"() {
+  def "사용자 제거 - 추가되지 않았던 사용자를 제거"() {
     when:
-    groupService.removeUser(new GroupRequests.RemoveUserRequest(id: GroupId.from("sa"), userId: UserId.from("kjh")))
+    groupService.removeUser(
+      new GroupRequests.RemoveUserRequest(
+        id: id,
+        userId: userId
+      )
+    )
 
     then:
     thrown(UserExceptions.GroupNotFoundException)

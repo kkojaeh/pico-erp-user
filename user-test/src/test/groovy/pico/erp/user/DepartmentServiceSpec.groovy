@@ -23,63 +23,74 @@ class DepartmentServiceSpec extends Specification {
   @Autowired
   DepartmentService departmentService
 
-  @Lazy
-  @Autowired
-  UserService userService
+  def id = DepartmentId.from("test")
+
+  def unknownId = DepartmentId.from("unknown")
+
+  def name = "테스트 부서"
+
+  def managerId = UserId.from("kjh")
 
   def setup() {
-    departmentService.create(new DepartmentRequests.CreateRequest(id: DepartmentId.from("PROD"), name: "생산부", managerId: UserId.from("kjh")))
-    departmentService.create(new DepartmentRequests.CreateRequest(id: DepartmentId.from("BIZ"), name: "영업부"))
+    departmentService.create(
+      new DepartmentRequests.CreateRequest(
+        id: id,
+        name: name,
+        managerId: managerId
+      )
+    )
   }
 
-  def "존재하는 부서 확인"() {
+  def "존재 - 아이디로 확인"() {
     when:
-    def exists = departmentService.exists(DepartmentId.from("PROD"))
+    def exists = departmentService.exists(id)
 
     then:
     exists == true
   }
 
-  def "존재하지 않는 부서 확인"() {
+  def "존재 - 존재하지 않는 아이디로 확인"() {
     when:
-    def exists = departmentService.exists(DepartmentId.from("!PROD"))
+    def exists = departmentService.exists(unknownId)
 
     then:
     exists == false
   }
 
-  def "존재하는 부서 조회"() {
+  def "조회 - 아이디로 조회"() {
     when:
-    def department = departmentService.get(DepartmentId.from("PROD"))
+    def department = departmentService.get(id)
 
     then:
 
-    department.id.value == "PROD"
-    department.name == "생산부"
-    department.managerId == UserId.from("kjh")
+    department.id == id
+    department.name == name
+    department.managerId == managerId
   }
 
-  def "존재하지 않는 부서 조회"() {
+  def "조회 - 존재하지 않는 아이디로 조회"() {
     when:
-    departmentService.get(DepartmentId.from("!PROD"))
+    departmentService.get(unknownId)
 
     then:
     thrown(DepartmentExceptions.NotFoundException)
   }
 
-  def "관리자 없음으로 변경"() {
+  def "수정 - 수정"() {
     when:
+
     departmentService.update(
       new DepartmentRequests.UpdateRequest(
-        id: DepartmentId.from("PROD"),
-        name: "생산부",
+        id: id,
+        name: "테스트 부서 2",
         managerId: null
       )
     )
 
-    def department = departmentService.get(DepartmentId.from("PROD"))
+    def department = departmentService.get(id)
 
     then:
+    department.name == "테스트 부서 2"
     department.managerId == null
   }
 

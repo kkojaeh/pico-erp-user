@@ -15,14 +15,8 @@ import spock.lang.Specification
 @ActiveProfiles("test")
 class UserQuerySpec extends Specification {
 
-  def setup() {
-  }
-
   @Autowired
   UserQuery userQuery
-
-  @Autowired
-  UserService userService
 
   def "사용자 조회 - 조회 조건에 맞게 조회"() {
     expect:

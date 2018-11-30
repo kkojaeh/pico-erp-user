@@ -10,8 +10,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.shared.IntegrationConfiguration
 import pico.erp.user.department.DepartmentId
-import pico.erp.user.department.DepartmentRequests
-import pico.erp.user.department.DepartmentService
 import pico.erp.user.role.RoleExceptions
 import pico.erp.user.role.RoleId
 import spock.lang.Specification
@@ -28,104 +26,156 @@ class UserServiceSpec extends Specification {
   @Autowired
   UserService userService
 
-  @Lazy
-  @Autowired
-  DepartmentService departmentService
+  def id = UserId.from("test")
+
+  def unknownId = UserId.from("unknown")
+
+  def name = "테스터"
+
+  def password = "Passw0rd!"
+
+  def mobilePhoneNumber = "+821011111112"
+
+  def departmentId = DepartmentId.from("management")
+
+  def position = "사원"
+
+  def email = "email@email.com"
+
+  def roleId = RoleId.from(UserRoles.USER_MANAGER.getId())
 
   def setup() {
-    departmentService.create(new DepartmentRequests.CreateRequest(id: DepartmentId.from("BIZ"), name: "영업부"))
+    userService.create(
+      new UserRequests.CreateRequest(
+        id: id,
+        name: name,
+        email: email,
+        password: password,
+        position: position,
+        mobilePhoneNumber: mobilePhoneNumber,
+        departmentId: departmentId
+      )
+    )
   }
 
-  def "존재하는 사용자가 확인"() {
+  def "존재 - 아이디로 확인"() {
     when:
-    def exists = userService.exists(UserId.from("kjh"))
+    def exists = userService.exists(id)
 
     then:
     exists == true
   }
 
-  def "auditor 전환"() {
+  def "auditor - auditor 전환"() {
     when:
-    def user = userService.get(UserId.from("kjh"))
-    def auditor = userService.getAuditor(UserId.from("kjh"))
+    def user = userService.get(id)
+    def auditor = userService.getAuditor(id)
 
     then:
     user.id.value == auditor.id
     user.name == auditor.name
   }
 
-  def "존재하지 않는 사용자가 확인"() {
+  def "존재 - 존재하지 않는 아이디로 확인"() {
     when:
-    def exists = userService.exists(UserId.from("!kjh"))
+    def exists = userService.exists(unknownId)
 
     then:
     exists == false
   }
 
-  def "존재하는 사용자 조회"() {
+  def "조회 - 아이디로 조회"() {
     when:
-    def user = userService.get(UserId.from("kjh"))
+    def user = userService.get(id)
 
     then:
 
-    user.id.value == "kjh"
-    user.name == "고재훈"
+    user.id == id
+    user.name == name
   }
 
-  def "존재하지 않는 사용자 조회"() {
+  def "조회 - 존재하지 않는 아이디로 조회"() {
     when:
-    userService.get(UserId.from("!kjh"))
+    userService.get(unknownId)
 
     then:
     thrown(UserExceptions.NotFoundException)
   }
 
-  def "패스워드 룰에 맞지 않는 사용자 생성"() {
+  def "패스워드 - 룰에 맞지 않는 사용자 생성"() {
     when:
-    // 짧은 패스워드
-    userService.create(new UserRequests.CreateRequest(id: UserId.from("kjh2"), password: "password", email: "kjh2@kd-ace.co.kr", name: "고재훈", mobilePhoneNumber: "+821000000000"))
+
+    userService.create(
+      new UserRequests.CreateRequest(
+        id: UserId.from("kjh2"),
+        password: "password",// 짧은 패스워드
+        email: "kjh2@kd-ace.co.kr",
+        name: "고재훈",
+        mobilePhoneNumber: "+821000000000"
+      )
+    )
 
     then:
     thrown(UserExceptions.PasswordInvalidException)
   }
 
-  def "기존 사용자의 이메일과 동일한 이메일로 사용자 생성"() {
+  def "이메일 - 동일한 이메일로 사용자 생성"() {
     when:
-    userService.create(new UserRequests.CreateRequest(id: UserId.from("kjh2"), password: "psdkljfs132!@", email: "kjh@kd-ace.co.kr", name: "고재훈2", mobilePhoneNumber: "+821000000000"))
+    userService.create(
+      new UserRequests.CreateRequest(
+        id: UserId.from("kjh2"),
+        password: "psdkljfs132!@",
+        email: email,
+        name: "고재훈2",
+        mobilePhoneNumber: "+821000000000"
+      )
+    )
 
     then:
     thrown(UserExceptions.EmailAlreadyExistsException)
   }
 
-  def "권한을 부여하고 확인"() {
+  def "권한 부여 - 권한 부여"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.grantRole(
+      new UserRequests.GrantRoleRequest(id: id, roleId: roleId)
+    )
 
     then:
-    userService.hasRole(UserId.from('kjh'), RoleId.from(UserRoles.USER_MANAGER.getId())) == true
+    userService.hasRole(id, roleId) == true
   }
 
-  def "제거한 권한을 확인"() {
+  def "권한 해제 - 부여한 권한을 해제"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
-    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.grantRole(
+      new UserRequests.GrantRoleRequest(id: id, roleId: roleId)
+    )
+    userService.revokeRole(
+      new UserRequests.RevokeRoleRequest(id: id, roleId: roleId)
+    )
 
     then:
-    userService.hasRole(UserId.from('kjh'), RoleId.from(UserRoles.USER_MANAGER.getId())) == false
+    userService.hasRole(id, roleId) == false
   }
 
-  def "기존에 존재하던 권한을 부여"() {
+  def "권한 부여 - 중복된 권한 부여"() {
     when:
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
-    userService.grantRole(new UserRequests.GrantRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.grantRole(
+      new UserRequests.GrantRoleRequest(id: id, roleId: roleId)
+    )
+    userService.grantRole(
+      new UserRequests.GrantRoleRequest(id: id, roleId: roleId)
+    )
 
     then:
     thrown(RoleExceptions.AlreadyExistsException)
   }
 
-  def "부여되지 않았던 권한을 해제"() {
+  def "권한 해제 - 부여되지 않은 권한을 해제"() {
     when:
-    userService.revokeRole(new UserRequests.RevokeRoleRequest(id: UserId.from('kjh'), roleId: RoleId.from(UserRoles.USER_MANAGER.getId())))
+    userService.revokeRole(
+      new UserRequests.RevokeRoleRequest(id: id, roleId: roleId)
+    )
 
     then:
     thrown(RoleExceptions.NotFoundException)

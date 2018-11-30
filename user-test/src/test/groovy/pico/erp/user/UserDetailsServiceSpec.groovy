@@ -16,14 +16,8 @@ import spock.lang.Specification
 @ActiveProfiles("test")
 class UserDetailsServiceSpec extends Specification {
 
-  def setup() {
-  }
-
   @Autowired
   UserDetailsService userDetailsService
-
-  @Autowired
-  UserService userService
 
   def "사용자 인증 - 생성한 사용자의 id 는 UserDetails 의 username 으로 매핑된다"() {
     expect:
