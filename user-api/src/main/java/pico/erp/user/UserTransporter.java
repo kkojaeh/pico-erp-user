@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.shared.data.ContentInputStream;
 
-public interface UserXporter {
+public interface UserTransporter {
 
   ContentInputStream exportExcel(@NotNull @Valid ExportRequest request);
 

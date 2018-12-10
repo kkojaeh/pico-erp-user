@@ -140,7 +140,6 @@ public class User implements Serializable {
     }
     groups.add(group);
     return new UserMessages.BelongToGroupResponse(Collections.emptyList());
-
   }
 
   public UserMessages.WithdrawFromGroupResponse apply(
@@ -160,6 +159,12 @@ public class User implements Serializable {
       groups.stream()
         .flatMap(group -> group.getRoles().stream())
     ).collect(Collectors.toSet());
+  }
+
+  public UserMessages.PrepareImportResponse apply(UserMessages.PrepareImportRequest request) {
+
+    return new UserMessages.PrepareImportResponse(Collections.emptyList());
+
   }
 
 

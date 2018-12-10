@@ -133,7 +133,7 @@ public abstract class UserMapper {
   }
 
   protected Department map(DepartmentId departmentId) {
-    return departmentMapper.domain(departmentId);
+    return departmentMapper.map(departmentId);
   }
 
   protected GroupId map(Group group) {

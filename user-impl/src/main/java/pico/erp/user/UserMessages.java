@@ -4,7 +4,9 @@ import java.util.Collection;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Role;
@@ -116,6 +118,15 @@ public interface UserMessages {
 
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Data
+  class PrepareImportRequest {
+
+    User previous;
+
+  }
+
   @Value
   class CreateResponse {
 
@@ -160,6 +171,13 @@ public interface UserMessages {
 
   @Value
   class DeleteResponse {
+
+    Collection<Event> events;
+
+  }
+
+  @Value
+  class PrepareImportResponse {
 
     Collection<Event> events;
 

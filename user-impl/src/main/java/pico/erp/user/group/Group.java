@@ -72,4 +72,10 @@ public class Group implements Serializable {
     return new RevokeRoleResponse(Collections.emptyList());
   }
 
+  public GroupMessages.PrepareImportResponse apply(GroupMessages.PrepareImportRequest request) {
+
+    return new GroupMessages.PrepareImportResponse(Collections.emptyList());
+
+  }
+
 }

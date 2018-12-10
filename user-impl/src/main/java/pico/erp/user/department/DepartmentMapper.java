@@ -22,19 +22,12 @@ public abstract class DepartmentMapper {
   @Autowired
   private DepartmentRepository departmentRepository;
 
-  public Department domain(DepartmentEntity entity) {
+  public Department jpa(DepartmentEntity entity) {
     return Department.builder()
       .id(entity.getId())
       .name(entity.getName())
       .manager(map(entity.getManagerId()))
       .build();
-  }
-
-  public Department domain(DepartmentId departmentId) {
-    return Optional.ofNullable(departmentId)
-      .map(id -> departmentRepository.findBy(id)
-        .orElseThrow(DepartmentExceptions.NotFoundException::new)
-      ).orElse(null);
   }
 
   @Mappings({
@@ -44,7 +37,14 @@ public abstract class DepartmentMapper {
     @Mapping(target = "lastModifiedBy", ignore = true),
     @Mapping(target = "lastModifiedDate", ignore = true)
   })
-  public abstract DepartmentEntity entity(Department domain);
+  public abstract DepartmentEntity jpa(Department domain);
+
+  public Department map(DepartmentId departmentId) {
+    return Optional.ofNullable(departmentId)
+      .map(id -> departmentRepository.findBy(id)
+        .orElseThrow(DepartmentExceptions.NotFoundException::new)
+      ).orElse(null);
+  }
 
   protected User map(UserId userId) {
     return userMapper.map(userId);

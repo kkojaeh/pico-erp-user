@@ -2,6 +2,7 @@ package pico.erp.user.department;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -59,6 +60,13 @@ public class Department implements Serializable {
     return new DepartmentMessages.DeleteResponse(
       Arrays.asList(new DeletedEvent(this.id))
     );
+  }
+
+  public DepartmentMessages.PrepareImportResponse apply(
+    DepartmentMessages.PrepareImportRequest request) {
+
+    return new DepartmentMessages.PrepareImportResponse(Collections.emptyList());
+
   }
 
 }

@@ -28,9 +28,9 @@ public class DepartmentRepositoryJpa implements DepartmentRepository {
 
   @Override
   public Department create(Department department) {
-    val entity = mapper.entity(department);
+    val entity = mapper.jpa(department);
     val created = repository.save(entity);
-    return mapper.domain(created);
+    return mapper.jpa(created);
   }
 
   @Override
@@ -46,20 +46,20 @@ public class DepartmentRepositoryJpa implements DepartmentRepository {
   @Override
   public Optional<Department> findBy(DepartmentId id) {
     return Optional.ofNullable(repository.findOne(id))
-      .map(mapper::domain);
+      .map(mapper::jpa);
   }
 
   @Override
   public Stream<Department> getAll() {
     return StreamSupport.stream(
       repository.findAll().spliterator(), false
-    ).map(mapper::domain);
+    ).map(mapper::jpa);
   }
 
   @Override
   public void update(Department department) {
     val entity = repository.findOne(department.getId());
-    mapper.pass(mapper.entity(department), entity);
+    mapper.pass(mapper.jpa(department), entity);
     repository.save(entity);
   }
 }

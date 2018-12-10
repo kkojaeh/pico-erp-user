@@ -4,7 +4,9 @@ import java.util.Collection;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.event.Event;
@@ -45,6 +47,15 @@ public interface DepartmentMessages {
 
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Data
+  class PrepareImportRequest {
+
+    Department previous;
+
+  }
+
   @Value
   class CreateResponse {
 
@@ -65,4 +76,12 @@ public interface DepartmentMessages {
     Collection<Event> events;
 
   }
+
+  @Value
+  class PrepareImportResponse {
+
+    Collection<Event> events;
+
+  }
+
 }
