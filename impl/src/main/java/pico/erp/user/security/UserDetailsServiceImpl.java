@@ -3,10 +3,12 @@ package pico.erp.user.security;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -60,6 +62,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
     /**
      * 시스템에서 생성한 유일 키값 사용자가 아이디로 입력한 값
      */
@@ -102,12 +106,32 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         .map(department -> department.getName())
         .orElse(null);
       this.authorities = user.getWholeRoles().stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getId()))
+        .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role.getId()))
         .collect(Collectors.toSet());
     }
 
     public String getPassword() {
       return "N/A";
+    }
+
+    @Override
+    public boolean hasAnyRole(String... roles) {
+      val roleAuthorities = Stream.of(roles)
+        .map(role -> ROLE_PREFIX + role)
+        .collect(Collectors.toSet());
+      return getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch(authority -> roleAuthorities.contains(authority));
+    }
+
+    @Override
+    public boolean hasRole(String role) {
+      val roleAuthority = ROLE_PREFIX + role;
+      return getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch(authority -> roleAuthority.equals(authority));
     }
   }
 

@@ -8,7 +8,7 @@ import pico.erp.shared.data.Role;
 
 public final class UserApi {
 
-  public static ApplicationId ID = ApplicationId.from("user");
+  public final static ApplicationId ID = ApplicationId.from("user");
 
   @RequiredArgsConstructor
   public enum Roles implements Role {
