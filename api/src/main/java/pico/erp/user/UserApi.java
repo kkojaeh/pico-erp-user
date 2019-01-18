@@ -13,7 +13,8 @@ public final class UserApi {
   @RequiredArgsConstructor
   public enum Roles implements Role {
 
-    USER_MANAGER;
+    USER_MANAGER,
+    USER_ACCESSOR;
 
     @Id
     @Getter

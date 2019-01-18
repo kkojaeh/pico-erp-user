@@ -93,4 +93,10 @@ public class UserApplication implements ApplicationStarter {
     return Roles.USER_MANAGER;
   }
 
+  @Bean
+  @Public
+  public Role userAccessorRole() {
+    return Roles.USER_ACCESSOR;
+  }
+
 }
