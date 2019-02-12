@@ -7,9 +7,9 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public class DepartmentEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @EmbeddedId
+  @Id
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.ID_LENGTH))
   })

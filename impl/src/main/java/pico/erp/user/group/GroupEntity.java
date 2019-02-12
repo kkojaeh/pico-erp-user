@@ -11,10 +11,10 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -73,7 +73,7 @@ public class GroupEntity implements Serializable {
   @LastModifiedDate
   OffsetDateTime lastModifiedDate;
 
-  @EmbeddedId
+  @Id
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.ID_LENGTH))
   })
