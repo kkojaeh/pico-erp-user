@@ -29,6 +29,9 @@ import pico.erp.shared.data.LabeledValuable;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
 import pico.erp.user.department.QDepartmentEntity;
+import pico.erp.user.group.Group;
+import pico.erp.user.group.GroupId;
+import pico.erp.user.group.GroupRepository;
 import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
@@ -57,6 +60,9 @@ public class UserQueryJpa implements UserQuery {
   @Autowired
   private RoleRepository roleRepository;
 
+  @Autowired
+  private GroupRepository groupRepository;
+
   @SuppressWarnings("Duplicates")
   @Override
   public List<? extends LabeledValuable> asLabels(String keyword, long limit) {
@@ -78,16 +84,43 @@ public class UserQueryJpa implements UserQuery {
   }
 
   @Override
+  public List<UserGroupIncludedOrNotView> findAllUserGroupIncludedOrNot(UserId userId) {
+    User user = Optional.ofNullable(userId)
+      .map(id -> userRepository.findBy(id)
+        .orElse(null)
+      )
+      .orElse(null);
+    Set<GroupId> included = new HashSet<>();
+    if (user != null) {
+      included.addAll(
+        user.getGroups()
+          .stream()
+          .map(Group::getId)
+          .collect(Collectors.toSet())
+      );
+    }
+    return groupRepository.findAll()
+      .map(group -> UserGroupIncludedOrNotView.builder()
+        .userId(userId)
+        .groupId(group.getId())
+        .groupName(group.getName())
+        .included(included.contains(group.getId()))
+        .build()
+      ).collect(Collectors.toList());
+
+  }
+
+  @Override
   public List<UserRoleGrantedOrNotView> findAllUserRoleGrantedOrNot(UserId userId) {
     User user = Optional.ofNullable(userId)
       .map(id -> userRepository.findBy(id)
         .orElse(null)
       )
       .orElse(null);
-    Set<String> roleIds = new HashSet<>();
+    Set<String> granted = new HashSet<>();
 
     if (user != null) {
-      roleIds.addAll(
+      granted.addAll(
         user.getRoles()
           .stream()
           .map(Role::getId)
@@ -104,7 +137,7 @@ public class UserQueryJpa implements UserQuery {
         .roleName(messageSource.getMessage(role.getNameCode(), null, role.getNameCode(), locale))
         .roleDescription(messageSource
           .getMessage(role.getDescriptionCode(), null, role.getDescriptionCode(), locale))
-        .granted(roleIds.contains(role.getId()))
+        .granted(granted.contains(role.getId()))
         .build()
       ).collect(Collectors.toList());
   }

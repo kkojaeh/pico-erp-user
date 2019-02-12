@@ -12,6 +12,8 @@ public interface UserQuery {
 
   List<UserRoleGrantedOrNotView> findAllUserRoleGrantedOrNot(@NotNull UserId userId);
 
+  List<UserGroupIncludedOrNotView> findAllUserGroupIncludedOrNot(@NotNull UserId userId);
+
   Page<UserView> retrieve(@NotNull UserView.Filter filter, Pageable pageable);
 
 }

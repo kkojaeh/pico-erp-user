@@ -45,7 +45,7 @@ public class GroupTransporterImpl implements GroupTransporter {
   @Override
   public ContentInputStream exportExcel(ExportRequest request) {
     val locale = LocaleContextHolder.getLocale();
-    Stream<Group> groups = request.isEmpty() ? Stream.empty() : groupRepository.getAll();
+    Stream<Group> groups = request.isEmpty() ? Stream.empty() : groupRepository.findAll();
     val workbook = new XSSFWorkbook();
     val bytes = Windmill
       .export(() -> groups.iterator())

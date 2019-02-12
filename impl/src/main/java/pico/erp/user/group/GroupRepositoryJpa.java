@@ -48,7 +48,7 @@ public class GroupRepositoryJpa implements GroupRepository {
   }
 
   @Override
-  public Stream<Group> getAll() {
+  public Stream<Group> findAll() {
     return StreamSupport.stream(
       repository.findAll().spliterator(), false
     ).map(mapper::domain);

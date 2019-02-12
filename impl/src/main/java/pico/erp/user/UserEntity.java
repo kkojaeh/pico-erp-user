@@ -6,15 +6,16 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
@@ -49,6 +50,7 @@ import pico.erp.user.role.RoleId;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cacheable
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -95,7 +97,7 @@ public class UserEntity implements Serializable {
   @LastModifiedDate
   OffsetDateTime lastModifiedDate;
 
-  @EmbeddedId
+  @Id
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.ID_LENGTH))
   })

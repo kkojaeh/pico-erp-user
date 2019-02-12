@@ -14,7 +14,7 @@ public interface GroupRepository {
 
   Optional<Group> findBy(@NotNull GroupId id);
 
-  Stream<Group> getAll();
+  Stream<Group> findAll();
 
   void update(@NotNull Group group);
 
