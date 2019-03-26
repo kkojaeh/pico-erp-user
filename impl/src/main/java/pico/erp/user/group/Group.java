@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import pico.erp.audit.annotation.Audit;
 import pico.erp.shared.data.Role;
 import pico.erp.user.group.GroupMessages.CreateResponse;
 import pico.erp.user.group.GroupMessages.DeleteResponse;
@@ -25,7 +24,6 @@ import pico.erp.user.role.RoleExceptions.NotFoundException;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Audit(alias = "group")
 public class Group implements Serializable {
 
   @Id

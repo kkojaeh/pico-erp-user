@@ -1,13 +1,11 @@
-banner:
-  location: classpath:user/banner.txt
-
 spring:
+  banner:
+    location: classpath:user/banner.txt
   application:
     name: pico-user
   session:
     store-type: NONE
   messages:
-    cache-seconds: 60
     basename: user-messages
     encoding: UTF-8
   datasource:
@@ -17,6 +15,8 @@ spring:
     password: ${USER_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
     hikari:
       maximum-pool-size: 4
+  flyway:
+    enabled: false
   jpa:
     database: HSQL
     hibernate:
@@ -93,5 +93,4 @@ logging:
     org:
       springframework: INFO
 
-flyway:
-  enabled: false
+

@@ -35,17 +35,17 @@ public class DepartmentRepositoryJpa implements DepartmentRepository {
 
   @Override
   public void deleteBy(DepartmentId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(DepartmentId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
   public Optional<Department> findBy(DepartmentId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::jpa);
   }
 
@@ -58,7 +58,7 @@ public class DepartmentRepositoryJpa implements DepartmentRepository {
 
   @Override
   public void update(Department department) {
-    val entity = repository.findOne(department.getId());
+    val entity = repository.findById(department.getId()).get();
     mapper.pass(mapper.jpa(department), entity);
     repository.save(entity);
   }

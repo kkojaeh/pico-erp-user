@@ -1,13 +1,11 @@
 package pico.erp.user.group;
 
+import kkojaeh.spring.boot.component.Give;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.audit.AuditService;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 import pico.erp.user.UserExceptions.NotFoundException;
 import pico.erp.user.UserId;
@@ -28,7 +26,7 @@ import pico.erp.user.role.RoleRepository;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@Give
 @Transactional
 @Validated
 public class GroupServiceLogic implements GroupService {
@@ -47,10 +45,6 @@ public class GroupServiceLogic implements GroupService {
 
   @Autowired
   private EventPublisher eventPublisher;
-
-  @Lazy
-  @Autowired
-  private AuditService auditService;
 
   @Override
   public void addUser(AddUserRequest request) {
@@ -73,7 +67,6 @@ public class GroupServiceLogic implements GroupService {
       throw new AlreadyExistsException();
     }
     groupRepository.create(group);
-    auditService.commit(group);
     eventPublisher.publishEvents(response.getEvents());
     return mapper.map(group);
   }
@@ -84,7 +77,6 @@ public class GroupServiceLogic implements GroupService {
       .orElseThrow(GroupExceptions.NotFoundException::new);
     val response = group.apply(mapper.map(request));
     groupRepository.deleteBy(request.getId());
-    auditService.delete(group);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -106,7 +98,6 @@ public class GroupServiceLogic implements GroupService {
       .orElseThrow(GroupExceptions.NotFoundException::new);
     val response = group.apply(mapper.map(request));
     groupRepository.update(group);
-    auditService.commit(group);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -146,7 +137,6 @@ public class GroupServiceLogic implements GroupService {
       .orElseThrow(GroupExceptions.NotFoundException::new);
     val response = group.apply(mapper.map(request));
     groupRepository.update(group);
-    auditService.commit(group);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -156,7 +146,6 @@ public class GroupServiceLogic implements GroupService {
       .orElseThrow(GroupExceptions.NotFoundException::new);
     val response = group.apply(mapper.map(request));
     groupRepository.update(group);
-    auditService.commit(group);
     eventPublisher.publishEvents(response.getEvents());
   }
 }

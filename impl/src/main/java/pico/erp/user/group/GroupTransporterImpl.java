@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import kkojaeh.spring.boot.component.Give;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.ContentInputStream;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.event.EventPublisher;
@@ -27,7 +27,7 @@ import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleMapper;
 
 @Component
-@Public
+@Give
 @Validated
 @Transactional
 public class GroupTransporterImpl implements GroupTransporter {

@@ -34,17 +34,17 @@ public class GroupRepositoryJpa implements GroupRepository {
 
   @Override
   public void deleteBy(GroupId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(GroupId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
   public Optional<Group> findBy(GroupId id) {
-    return Optional.ofNullable(repository.findOne(id)).map(mapper::domain);
+    return repository.findById(id).map(mapper::domain);
   }
 
   @Override
@@ -56,7 +56,7 @@ public class GroupRepositoryJpa implements GroupRepository {
 
   @Override
   public void update(Group group) {
-    GroupEntity entity = repository.findOne(group.getId());
+    GroupEntity entity = repository.findById(group.getId()).get();
     mapper.pass(mapper.entity(group), entity);
     repository.save(entity);
   }

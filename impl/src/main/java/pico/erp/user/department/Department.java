@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import pico.erp.audit.annotation.Audit;
 import pico.erp.user.User;
 import pico.erp.user.department.DepartmentEvents.CreatedEvent;
 import pico.erp.user.department.DepartmentEvents.DeletedEvent;
@@ -23,7 +22,6 @@ import pico.erp.user.department.DepartmentEvents.UpdatedEvent;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Audit(alias = "department")
 public class Department implements Serializable {
 
   private static final long serialVersionUID = 1L;
