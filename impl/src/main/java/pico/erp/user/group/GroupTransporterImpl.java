@@ -6,7 +6,7 @@ import com.coreoz.windmill.exports.exporters.excel.ExportExcelConfig;
 import com.coreoz.windmill.files.FileSource;
 import com.coreoz.windmill.imports.Parsers;
 import java.io.ByteArrayInputStream;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,7 +68,7 @@ public class GroupTransporterImpl implements GroupTransporter {
     return ContentInputStream.builder()
       .name(
         String.format("groups-%s.%s",
-          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(OffsetDateTime.now()),
+          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()),
           ContentInputStream.XLSX_CONTENT_EXTENSION
         )
       )
