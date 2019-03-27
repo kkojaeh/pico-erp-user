@@ -3,7 +3,6 @@ package pico.erp.user
 import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
@@ -17,7 +16,6 @@ import spock.lang.Specification
 
 @SpringBootTest(classes = [UserApplication])
 @SpringBootTestComponent(parent = TestParentApplication, siblings = [])
-@ComponentScan(useDefaultFilters = false)
 @Transactional
 @Rollback
 @ActiveProfiles("test")
