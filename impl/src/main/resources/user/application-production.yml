@@ -9,7 +9,7 @@ spring:
       hibernate.generate_statistics: ${HIBERNATE_GENERATE_STATISTICS:false}
   datasource:
     hikari:
-      maximum-pool-size: 6
+      maximum-pool-size: 4
   flyway:
     enabled: true
     locations: classpath:user/flyway/{vendor}
