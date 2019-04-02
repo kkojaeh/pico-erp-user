@@ -1,10 +1,11 @@
 package pico.erp.user;
 
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pico.erp.shared.ApplicationInitializer;
 import pico.erp.user.UserRequests.CreateRequest;
 import pico.erp.user.group.GroupQuery;
 import pico.erp.user.group.GroupRequests;
@@ -14,7 +15,8 @@ import pico.erp.user.group.GroupService;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Configuration
-public class AdministratorInitializer implements ApplicationInitializer {
+public class AdministratorInitializer implements
+  ApplicationListener<SpringBootComponentReadyEvent> {
 
   @Autowired
   private UserService userService;
@@ -29,7 +31,7 @@ public class AdministratorInitializer implements ApplicationInitializer {
   private GroupQuery groupQuery;
 
   @Override
-  public void initialize() {
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
     CreateRequest user = superAdmin();
     GroupRequests.CreateRequest group = superAdminGroup();
     if (!userService.exists(user.getId())) {

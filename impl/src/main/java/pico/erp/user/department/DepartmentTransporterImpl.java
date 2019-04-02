@@ -6,10 +6,11 @@ import com.coreoz.windmill.exports.exporters.excel.ExportExcelConfig;
 import com.coreoz.windmill.files.FileSource;
 import com.coreoz.windmill.imports.Parsers;
 import java.io.ByteArrayInputStream;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.stream.Stream;
+import kkojaeh.spring.boot.component.Give;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,14 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.ContentInputStream;
 import pico.erp.shared.event.EventPublisher;
 import pico.erp.user.UserId;
 import pico.erp.user.UserMapper;
 
 @Component
-@Public
+@Give
 @Validated
 @Transactional
 public class DepartmentTransporterImpl implements DepartmentTransporter {
@@ -59,7 +59,7 @@ public class DepartmentTransporterImpl implements DepartmentTransporter {
     return ContentInputStream.builder()
       .name(
         String.format("departments-%s.%s",
-          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(OffsetDateTime.now()),
+          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()),
           ContentInputStream.XLSX_CONTENT_EXTENSION
         )
       )

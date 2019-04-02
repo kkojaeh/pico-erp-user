@@ -1,13 +1,11 @@
 package pico.erp.user;
 
+import kkojaeh.spring.boot.component.Give;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.audit.AuditService;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.Auditor;
 import pico.erp.shared.event.EventPublisher;
 import pico.erp.user.UserExceptions.AlreadyExistsException;
@@ -24,7 +22,7 @@ import pico.erp.user.role.RoleRepository;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@Give
 @Transactional
 @Validated
 public class UserServiceLogic implements UserService {
@@ -37,10 +35,6 @@ public class UserServiceLogic implements UserService {
 
   @Autowired
   private EventPublisher eventPublisher;
-
-  @Lazy
-  @Autowired
-  private AuditService auditService;
 
   @Autowired
   private UserMapper userMapper;
@@ -56,7 +50,6 @@ public class UserServiceLogic implements UserService {
     val response = user.apply(userMapper.map(request));
 
     val created = userRepository.create(user);
-    auditService.commit(created);
     eventPublisher.publishEvents(response.getEvents());
     return userMapper.map(created);
   }
@@ -67,7 +60,6 @@ public class UserServiceLogic implements UserService {
       .orElseThrow(NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.deleteBy(request.getId());
-    auditService.delete(user);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -103,7 +95,6 @@ public class UserServiceLogic implements UserService {
       .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
-    auditService.commit(user);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -121,7 +112,6 @@ public class UserServiceLogic implements UserService {
       .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
-    auditService.commit(user);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -131,7 +121,6 @@ public class UserServiceLogic implements UserService {
       .orElseThrow(UserExceptions.NotFoundException::new);
     val response = user.apply(userMapper.map(request));
     userRepository.update(user);
-    auditService.commit(user);
     eventPublisher.publishEvents(response.getEvents());
   }
 

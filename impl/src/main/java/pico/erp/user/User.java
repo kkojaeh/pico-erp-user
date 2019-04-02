@@ -17,7 +17,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.util.StringUtils;
-import pico.erp.audit.annotation.Audit;
 import pico.erp.shared.data.Role;
 import pico.erp.user.UserEvents.CreatedEvent;
 import pico.erp.user.UserEvents.UpdatedEvent;
@@ -34,7 +33,6 @@ import pico.erp.user.role.RoleExceptions.NotFoundException;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Audit(alias = "user")
 public class User implements Serializable {
 
   private static final long serialVersionUID = 1L;

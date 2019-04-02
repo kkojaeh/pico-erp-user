@@ -48,17 +48,17 @@ public class UserRepositoryJpa implements UserRepository {
 
   @Override
   public void deleteBy(UserId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(UserId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
   public Optional<User> findBy(UserId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::domain);
   }
 
@@ -83,7 +83,7 @@ public class UserRepositoryJpa implements UserRepository {
 
   @Override
   public void update(User user) {
-    val entity = repository.findOne(user.getId());
+    val entity = repository.findById(user.getId()).get();
     mapper.pass(mapper.entity(user), entity);
     repository.save(entity);
   }

@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import kkojaeh.spring.boot.component.Give;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.shared.ExtendedLabeledValue;
 import pico.erp.shared.LabeledValue;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.LabeledValuable;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
@@ -36,7 +36,7 @@ import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
 @Service
-@Public
+@Give
 @Transactional(readOnly = true)
 @Validated
 public class UserQueryJpa implements UserQuery {

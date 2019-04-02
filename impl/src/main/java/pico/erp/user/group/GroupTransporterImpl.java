@@ -6,10 +6,11 @@ import com.coreoz.windmill.exports.exporters.excel.ExportExcelConfig;
 import com.coreoz.windmill.files.FileSource;
 import com.coreoz.windmill.imports.Parsers;
 import java.io.ByteArrayInputStream;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import kkojaeh.spring.boot.component.Give;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.ContentInputStream;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.event.EventPublisher;
@@ -27,7 +27,7 @@ import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleMapper;
 
 @Component
-@Public
+@Give
 @Validated
 @Transactional
 public class GroupTransporterImpl implements GroupTransporter {
@@ -68,7 +68,7 @@ public class GroupTransporterImpl implements GroupTransporter {
     return ContentInputStream.builder()
       .name(
         String.format("groups-%s.%s",
-          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(OffsetDateTime.now()),
+          DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()),
           ContentInputStream.XLSX_CONTENT_EXTENSION
         )
       )
