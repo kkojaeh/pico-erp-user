@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,7 +31,7 @@ import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleRepository;
 
 @Service
-@Give
+@ComponentBean
 @Transactional(readOnly = true)
 @Validated
 public class GroupQueryJpa implements GroupQuery {

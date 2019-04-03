@@ -3,16 +3,14 @@ package pico.erp.user.role;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import kkojaeh.spring.boot.component.ComponentAutowired;
 import org.springframework.stereotype.Repository;
 import pico.erp.shared.data.Role;
 
 @Repository
 public class RoleRepositoryImpl implements RoleRepository {
 
-  @Autowired(required = false)
-  @Lazy
+  @ComponentAutowired(required = false)
   List<Role> roles;
 
   @Override

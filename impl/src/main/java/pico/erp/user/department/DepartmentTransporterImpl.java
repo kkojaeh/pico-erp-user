@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.stream.Stream;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,7 +24,7 @@ import pico.erp.user.UserId;
 import pico.erp.user.UserMapper;
 
 @Component
-@Give
+@ComponentBean
 @Validated
 @Transactional
 public class DepartmentTransporterImpl implements DepartmentTransporter {

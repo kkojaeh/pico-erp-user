@@ -1,6 +1,6 @@
 package pico.erp.user;
 
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import kkojaeh.spring.boot.component.SpringBootComponent;
 import kkojaeh.spring.boot.component.SpringBootComponentBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pico.erp.ComponentDefinition;
 import pico.erp.shared.SharedConfiguration;
 import pico.erp.shared.data.Role;
 import pico.erp.user.UserApi.Roles;
@@ -33,12 +34,17 @@ import pico.erp.user.UserApi.Roles;
   SharedConfiguration.class
 })
 @PropertySource({"classpath:user/password-rules.properties"})
-public class UserApplication {
+public class UserApplication implements ComponentDefinition {
 
   public static void main(String[] args) {
     new SpringBootComponentBuilder()
       .component(UserApplication.class)
       .run(args);
+  }
+
+  @Override
+  public Class<?> getComponentClass() {
+    return UserApplication.class;
   }
 
   @Component
@@ -53,13 +59,13 @@ public class UserApplication {
   }
 
   @Bean
-  @Give
+  @ComponentBean(host = false)
   public Role userAccessorRole() {
     return Roles.USER_ACCESSOR;
   }
 
   @Bean
-  @Give
+  @ComponentBean(host = false)
   public Role userManagerRole() {
     return Roles.USER_MANAGER;
   }

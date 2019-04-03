@@ -7,13 +7,14 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
 import pico.erp.shared.TestParentApplication
 import pico.erp.user.group.GroupQuery
 import pico.erp.user.group.GroupView
 import spock.lang.Specification
 
 @SpringBootTest(classes = [UserApplication])
-@SpringBootTestComponent(parent = TestParentApplication, siblings = [])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @Transactional
 @Rollback
 @ActiveProfiles("test")

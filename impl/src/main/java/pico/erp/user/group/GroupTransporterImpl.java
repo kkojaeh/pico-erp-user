@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -27,7 +27,7 @@ import pico.erp.user.role.RoleId;
 import pico.erp.user.role.RoleMapper;
 
 @Component
-@Give
+@ComponentBean
 @Validated
 @Transactional
 public class GroupTransporterImpl implements GroupTransporter {
